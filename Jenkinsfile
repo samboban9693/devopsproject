@@ -43,7 +43,7 @@ stage('Create Scratch Org') {
    
 }
 stage('Push To Test Org') {
-   rc = sh returnStatus: true, script: "${toolbelt}/sfdx force:source:push --targetusername ${SFDC_USERNAME}"
+   rc = bat returnStatus: true, script: "${toolbelt}/sfdx force:source:push --targetusername ${SFDC_USERNAME}"
    if (rc != 0) {
               error 'push all failed'
    }
