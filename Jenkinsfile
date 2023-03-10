@@ -29,10 +29,10 @@ withCredentials([file(credentialsId:JWT_KEY_CRED_ID, variable:'jwt_key_file')])
 print "JWT Key Credential Id Fetched successfully"
 stage('Create Scratch Org') {
    print "Connecting to Salesforce.."
-   rc = sh returnStatus: true, script: '${toolbelt}/sfdx force:auth:jwt:grant --clientid ${CONNECTED_APP_CONSUMER_KEY} --username ${HUB_ORG} --jwtkeyfile ${jwt_key_file} --setdefaultdevhubusername --instanceurl ${SFDC_HOST}'
+   rc = bat returnStatus: true, script: '${toolbelt}/sfdx force:auth:jwt:grant --clientid ${CONNECTED_APP_CONSUMER_KEY} --username ${HUB_ORG} --jwtkeyfile ${jwt_key_file} --setdefaultdevhubusername --instanceurl ${SFDC_HOST}'
    if (rc != 0) { error 'hub org authorization failed' }
  
-   rmsg = sh returnStdout: true, script: "${toolbelt}/sfdx force:org:create -f config/project-scratch-def.json -a ebikes --setdefaultusername --json"
+   rmsg = bat returnStdout: true, script: "${toolbelt}/sfdx force:org:create -f config/project-scratch-def.json -a ebikes --setdefaultusername --json"
    printf rmsg
    def jsonSlurper = new JsonSlurper()
    def robj = jsonSlurper.parseText(rmsg)
@@ -43,7 +43,7 @@ stage('Create Scratch Org') {
    
 }
 stage('Push To Test Org') {
-   rc = bat returnStatus: true, script: "${toolbelt}/sfdx force:source:push --targetusername ${SFDC_USERNAME}"
+   rc = sh returnStatus: true, script: "${toolbelt}/sfdx force:source:push --targetusername ${SFDC_USERNAME}"
    if (rc != 0) {
               error 'push all failed'
    }
