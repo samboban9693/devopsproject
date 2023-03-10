@@ -29,7 +29,7 @@ withCredentials([file(credentialsId:JWT_KEY_CRED_ID, variable:'jwt_key_file')])
 print "JWT Key Credential Id Fetched successfully"
 stage('Create Scratch Org') {
    print "Connecting to Salesforce.."
-   rc = sh returnStatus: true, script: "sfdx force:auth:logout --targetusername $HUB_ORG} -p && sfdx force:auth:jwt:grant --clientid ${CONNECTED_APP_CONSUMER_KEY} --username ${HUB_ORG} --jwtkeyfile  ${jwt_key_file} --setdefaultdevhubusername --instanceurl ${SFDC_HOST}"
+   rc = sh returnStatus: true, script: "sfdx force:auth:logout --targetusername ${HUB_ORG} -p && sfdx force:auth:jwt:grant --clientid ${CONNECTED_APP_CONSUMER_KEY} --username ${HUB_ORG} --jwtkeyfile  ${jwt_key_file} --setdefaultdevhubusername --instanceurl ${SFDC_HOST}"
    if (rc != 0) { error 'hub org authorization failed' }
  
    rmsg = sh returnStdout: true, script: "sfdx force:org:create -f config/project-scratch-def.json -a ebikes --setdefaultusername --json"
@@ -44,6 +44,7 @@ stage('Create Scratch Org') {
 }
 stage('Push To Test Org') {
    rc = sh returnStatus: true, script: "${toolbelt}/sfdx force:source:push --targetusername ${SFDC_USERNAME}"
+   
    if (rc != 0) {
               error 'push all failed'
    }
