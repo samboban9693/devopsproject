@@ -55,7 +55,7 @@ stage('Push To Test Org') {
    }
    print "push all completed"
    // assign permset
-   rc = command("sfdx force:user:permset:assign --targetusername ${SFDC_USERNAME} --permsetname ebikes");
+   rc = command("sfdx force:user:permset:assign --targetusername ebikes --permsetname ebikes");
    if (rc != 0) {
             error 'push permission set failed'
    }
