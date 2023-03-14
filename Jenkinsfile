@@ -27,6 +27,7 @@ stage('checkout source'){
 withCredentials([file(credentialsId:JWT_KEY_CRED_ID, variable:'jwt_key_file')])
 {
 print "JWT Key Credential Id Fetched successfully"
+def jwt_key_file = server.key
 println jwt_key_file
 stage('Create Scratch Org') {
    print "Connecting to Salesforce.."
