@@ -32,11 +32,11 @@ def jwt_key_file = 'server.key'
 println jwt_key_file
 stage('Create Scratch Org') {
    print "Connecting to Salesforce.."
-   rc = sh returnStatus: true, script: "sfdx force:auth:jwt:grant --clientid ${CONNECTED_APP_CONSUMER_KEY} --username ${HUB_ORG} --jwtkeyfile  ${jwt_key_file} --setdefaultdevhubusername --setalias HubOrg --instanceurl ${SFDC_HOST}"
+   rc = command("sfdx force:auth:jwt:grant --clientid ${CONNECTED_APP_CONSUMER_KEY} --username ${HUB_ORG} --jwtkeyfile  ${jwt_key_file} --setdefaultdevhubusername --setalias HubOrg --instanceurl ${SFDC_HOST}");
    print rc
    //if (rc != 0) { error 'hub org authorization failed' }
  
-   rmsg = sh returnStdout: true, script: "sfdx force:org:create --targetdevhubusername HubOrg -f config/project-scratch-def.json -a ebikes --setdefaultusername"
+   //rmsg = sh returnStdout: true, script: "sfdx force:org:create --targetdevhubusername HubOrg -f config/project-scratch-def.json -a ebikes --setdefaultusername"
    //printf rmsg
    /*printf 
    def jsonSlurper = new JsonSlurper()
@@ -47,7 +47,7 @@ stage('Create Scratch Org') {
    print "scratch org created with username ${SFDC_USERNAME}"*/
    
 }
-stage('Push To Test Org') {
+/*stage('Push To Test Org') {
    rc = sh returnStatus: true, script: "sfdx force:source:push --targetusername ebikes"
    
    if (rc != 0) {
@@ -88,4 +88,11 @@ stage('Delete Test Org') {
         print "Org delete request completed"
 }*/
 }
+}
+def command(script) {
+    if (isUnix()) {
+        return sh(returnStatus: true, script: script);
+    } else {
+        return bat(returnStatus: true, script: script);
+    }
 }
