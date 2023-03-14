@@ -33,6 +33,7 @@ println jwt_key_file
 stage('Create Scratch Org') {
    print "Connecting to Salesforce.."
    rc = sh returnStatus: true, script: "sfdx force:auth:jwt:grant --clientid ${CONNECTED_APP_CONSUMER_KEY} --username ${HUB_ORG} --jwtkeyfile  ${jwt_key_file} --setdefaultdevhubusername --instanceurl ${SFDC_HOST}"
+   print rc
    if (rc != 0) { error 'hub org authorization failed' }
  
    rmsg = sh returnStdout: true, script: "sfdx force:org:create -f config/project-scratch-def.json -a ebikes --setdefaultusername --json"
