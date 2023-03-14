@@ -36,9 +36,9 @@ stage('Create Scratch Org') {
    print rc
    //if (rc != 0) { error 'hub org authorization failed' }
  
-   //rmsg = sh returnStdout: true, script: "sfdx force:org:create --targetdevhubusername HubOrg -f config/project-scratch-def.json -a ebikes --setdefaultusername"
-   //printf rmsg
-   /*printf 
+   rmsg = command("sfdx force:org:create --targetdevhubusername HubOrg -f config/project-scratch-def.json -a ebikes --setdefaultusername");
+   /*printf rmsg
+   printf 
    def jsonSlurper = new JsonSlurper()
    def robj = jsonSlurper.parseText(rmsg)
    if (robj.status!= 0) { error 'org creation failed: ' + robj.message }
@@ -47,15 +47,15 @@ stage('Create Scratch Org') {
    print "scratch org created with username ${SFDC_USERNAME}"*/
    
 }
-/*stage('Push To Test Org') {
-   rc = sh returnStatus: true, script: "sfdx force:source:push --targetusername ebikes"
+stage('Push To Test Org') {
+   rc = command("sfdx force:source:push --targetusername ebikes");
    
    if (rc != 0) {
               error 'push all failed'
    }
    print "push all completed"
    // assign permset
-   rc = sh returnStatus: true, script: "sfdx force:user:permset:assign --targetusername ${SFDC_USERNAME} --permsetname ebikes"
+   rc = command("sfdx force:user:permset:assign --targetusername ${SFDC_USERNAME} --permsetname ebikes");
    if (rc != 0) {
             error 'push permission set failed'
    }
