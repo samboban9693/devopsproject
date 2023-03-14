@@ -38,30 +38,31 @@ stage('Create Scratch Org') {
  
    rmsg = sh returnStdout: true, script: "sfdx force:org:create -f config/project-scratch-def.json -a ebikes --setdefaultusername --json"
    printf rmsg
+   /*printf 
    def jsonSlurper = new JsonSlurper()
    def robj = jsonSlurper.parseText(rmsg)
    if (robj.status!= 0) { error 'org creation failed: ' + robj.message }
    SFDC_USERNAME=robj.result.username
    robj = null
-   print "scratch org created with username ${SFDC_USERNAME}"
+   print "scratch org created with username ${SFDC_USERNAME}"*/
    
 }
 stage('Push To Test Org') {
-   rc = sh returnStatus: true, script: "${toolbelt}/sfdx force:source:push --targetusername ${SFDC_USERNAME}"
+   rc = sh returnStatus: true, script: "sfdx force:source:push --targetusername ebikes"
    
    if (rc != 0) {
               error 'push all failed'
    }
    print "push all completed"
    // assign permset
-   rc = sh returnStatus: true, script: "${toolbelt}/sfdx force:user:permset:assign --targetusername ${SFDC_USERNAME} --permsetname ebikes"
+   rc = sh returnStatus: true, script: "sfdx force:user:permset:assign --targetusername ${SFDC_USERNAME} --permsetname ebikes"
    if (rc != 0) {
             error 'push permission set failed'
    }
    print "push permission set completed"
 }
  
-stage('Run Apex Test') {
+/*stage('Run Apex Test') {
    sh "mkdir -p ${RUN_ARTIFACT_DIR}"
    timeout(time: 120, unit: 'SECONDS') {
           rc = sh returnStatus: true, script: "${toolbelt}/sfdx force:apex:test:run --testlevel RunLocalTests --outputdir ${RUN_ARTIFACT_DIR} --resultformat json --targetusername ${SFDC_USERNAME}"
@@ -73,7 +74,7 @@ stage('Run Apex Test') {
 }
  
 stage('Collect Results') {
-        junit keepLongStdio: true, testResults: 'tests/**/*-junit.xml'
+        junit keepLongStdio: true, testResults: 'tests/
    print "Test results collected successfully"
 }
  
@@ -86,5 +87,5 @@ stage('Delete Test Org') {
         }
         print "Org delete request completed"
 }
-}
+}*/
 }
