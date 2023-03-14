@@ -36,7 +36,7 @@ stage('Create Scratch Org') {
    print rc
    //if (rc != 0) { error 'hub org authorization failed' }
  
-   rmsg = sh returnStdout: true, script: "sfdx force:org:create -f config/project-scratch-def.json -a ebikes --setdefaultusername --json"
+   rmsg = sh returnStdout: true, script: "sfdx force:org:create --targetdevhubusername HubOrg -f config/project-scratch-def.json -a ebikes --setdefaultusername"
    //printf rmsg
    /*printf 
    def jsonSlurper = new JsonSlurper()
